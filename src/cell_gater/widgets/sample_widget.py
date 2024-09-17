@@ -48,8 +48,9 @@ class SampleWidget(QWidget):
         model : DataModel | None
             The data model dataclass. If provided, this means that the plugin is used by means of a CLI to be
             implemented.
-
+            
         """
+
         super().__init__()
         self._scatter_widget = None
         self._viewer = napari_viewer
@@ -58,8 +59,7 @@ class SampleWidget(QWidget):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         # object, int row, int column, int rowSpan = 1, int columnSpan = 1
-        # load_label = QLabel("Load data:")
-        # self.layout().addWidget(load_label, 0, 0, 1, 1)
+        
         # Open sample directory dialog
         self.load_samples_button = QPushButton("Load quantifications dir")
         self.load_samples_button.clicked.connect(self._open_sample_dialog)

@@ -39,6 +39,17 @@ class DataModel:
     _current_gate: float = field(default_factory=float, init=False)
     _manual_channel_mapping: str | None = field(default=None, init=False)
 
+    _phenotype_matrix: pd.DataFrame = field(default_factory=pd.DataFrame, init=False)
+
+    @property
+    def phenotype_matrix(self):
+        """The phenotype matrix."""
+        return self._phenotype_matrix
+    
+    @phenotype_matrix.setter
+    def phenotype_matrix(self, phenotype_matrix: pd.DataFrame) -> None:
+        self._phenotype_matrix = phenotype_matrix
+
     @property
     def active_ref_marker(self):
         """The reference marker for the gates."""
