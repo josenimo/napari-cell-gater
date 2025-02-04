@@ -52,48 +52,57 @@ Users will select the necesary directories: images, masks, and quantification di
 - Optional `Load channel map` can be used to define specific channels, its usage is explain later.
 
 ## Step 3: Select lowerbound and upperbound channels
-
 - The two dropdown menus will show all measured features (acquired from the column names from the quantification matrices).
 - The `lowerbound` defines the first feature to threshold, and the `upperbound` the last feature to threshold. Theoretically, you could choose all features. I suggest you pick the ones you need for phenotyping.
 - If you plan to save gates file, and reload the file in another instance, you must pick the same lowerbound and upperbound features.
 - The `Remove markers with prefix (default: DNA,DAPI)` field will let you ignore any channel with any prefix provided, for many prefixes you must separate with a comma `,`. 
 
 ## Step 4: Validate and proceed to sample and marker selection
-
 - Press `Validate input` button, it will check files to ensure concordance between files.
 - Assumptions are:
 - Quantification matrix should have the same number of rows as the maximum segmentation CellID
 - Segmentation mask and multiplexed image should have the same x,y dimensions
 
 ## Step 5: Sample and marker selection
+![Screenshot 2025-02-04 at 14 31 07](https://github.com/user-attachments/assets/4f7e69c5-e0d1-469c-9429-901c8be06ebf)
 
-4. Select a sample, and a marker from dropdown menus. 3 layers will load:   
-        (a.) the reference channel (default: first channel, changeable by dropdown menu)   
-        (b.) the segmentation mask (for large images this might be a problem)  
-        (c.) the channel_to_be_gated  
-A scatter plot (default: x-axis=channel_to_be_gated intensity, y-axis=Area) (y-axis can be changed by dropdown)      
-Underneath the scatterplot a slider will appear, the position of the slider will show up as a vertical line in the scatter plot.
-The scatter plot can also be changed to a hexbin plot, which really helps with dense clusters of cells.
-Plotting the data in log10 space is also possible by dropdown. Most of the times it helps. Gates would still be saved in linear space.
+### Default layers displayed
+- Marker to be thresholded, in color **GREEN**
+- Reference marker, default is first marker, in color **MAGENTA**
+- Segmentation mask
 
-6. Adjust the contrast with the Napari layer menu (top left)
-7. Drag the slider to what they think is correct
-8. Click "Plot Points" to plot points on top of positive cells.
-9. Repeat steps 5 and 6 until satisfied.
-10. Click "Save Gate" to save the gate for the current marker and sample. Go to step 4 and repeat.
+### Top menu explanation
+- `Select sample:` : Dropdown menu for all samples, each set of files with same prefix is considered a sample.
+- `Marker label:` : Dropdown menu for all features between upper and lower bounds. Will be used as X-axis on scatterplot.
+- `Choose Y-axis` : Dropdown menu for all features, this feature is used for the y-axis of the scatter plot.
+- `Select reference channel` : Choose marker to use as reference (default is first marker).
+- `Logarithmic scale` : IF `Yes` both axes of scatterplot will be log10() transformed, the slider bar underneath as well. Gate saved will be raw value.
+- `Plot type` : IF `hexbin` hexbin will  be plotted, better for very dense datasets.
+
+### Bottom menu explanation
+- `Manual gate input` : Enter a value (not logged) to set the slider
+- `Set gate manually` : Use value in text field to apply to slider
+- `Plot Points` : Places points on cells with marker values above current threshold. Multiple point layers can be created. Upon creating another point layer, old point layers will be automatically hidden.
+- `Save Gate` : First time, it pops a menu to create a .csv file to store thresholds. Consecutive uses stores current gate, specific to sample and marker. IF gate value already exists it will be overwritten. AUTOSAVE: It automatically saves every new gate to the file.
+- `Load existing gates` : Opens menu to select .csv file from previous thresholding session
+
+## Step 6: Thresholding loop
+- Ensure correct sample and marker from Top menu.
+- Adjust contrast limits and opacity on top left Napari menu, (right click for extra long bar).
+- Drag slider to separate negative and positive cells (there are always tradeoffs).
+- Plot points, and perform quality control whether threshold is appropiate.
+- Repeat previous steps as needed
+- Save gate to file
 
 ## Contributing
-
 Contributions are very welcome. Tests can be run with [tox], please ensure
 the coverage at least stays the same before you submit a pull request.
 
 ## License
-
 Distributed under the terms of the [BSD-3] license,
 "napari-cell-gater" is free and open source software
 
 ## Issues
-
 If you encounter any problems, please [file an issue] along with a detailed description.
 
 [napari]: https://github.com/napari/napari
@@ -106,7 +115,6 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 [Apache Software License 2.0]: http://www.apache.org/licenses/LICENSE-2.0
 [Mozilla Public License 2.0]: https://www.mozilla.org/media/MPL/2.0/index.txt
 [cookiecutter-napari-plugin]: https://github.com/napari/cookiecutter-napari-plugin
-
 [napari]: https://github.com/napari/napari
 [tox]: https://tox.readthedocs.io/en/latest/
 [pip]: https://pypi.org/project/pip/
