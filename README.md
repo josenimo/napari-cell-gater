@@ -13,27 +13,59 @@ A plugin to perform cell marker gating for multiplexed immunofluorescent imaging
 
 ----------------------------------
 
-## Installation
+# Installation
 
-Step 1. 
+### Step 1. 
 Install napari (see https://napari.org/stable/tutorials/fundamentals/installation)
 
-Step 2.
+### Step 2.
 Install `napari-cell-gater` via [pip]:
 
-    pip install git+https://github.com/melonora/napari-cell-gater.git
+    pip install git+https://github.com/josenimo/napari-cell-gater.git
 
-## How to use
+# How to use
+## Step 0: Open plugin
+- Open napari by executing `napari` in the command line
+- Open plugin with name `load_sample_data (Multiplex imaging cell gating)`
+- Menu should be displayed on napari user interface
 
-1. Users will select the necesary directories: images, masks, and quantification directories.
+## Step 1: Stage files
+Users will select the necesary directories: images, masks, and quantification directories.
+### Assumptions for inputs:  
+- Files are inside directories, single files are not supported.
+- The naming of files must match, for example the image for sample 1, should be "1.ome.tif" or "1.tif"; the mask file "1.tif"; and the quantification file "1.csv".  
+- All images, masks, and quantification files should be inside their respective folders.
+- Any extra files in those folders can make code fail.  
 
-    Assumptions for inputs:  
-        1.1 Files inside these directories are named according to the samples names.   
-        1.2 The image for sample 1, should be "1.ome.tif" or "1.tif"; the mask file "1.tif"; and the quantification file "1.csv".  
-        1.3 Each set of files should all be inside each of the three folders.  
-        1.4 Any extra files in those folders can make code fail.  
+### Example 1: Staging for single files.
+![Screenshot 2025-02-04 at 12 53 43](https://github.com/user-attachments/assets/2afaab0a-0159-46a8-a71e-81aefdcb136f)
 
-3. Select the lowerbound and upperbound channels to gate. These are all the columns from the quantification csv file that you want to threshold. You must pick the same channels if you plan to save and reload the gates.  
+### Example 2: Staging for many files.
+![Screenshot 2025-02-04 at 13 05 34](https://github.com/user-attachments/assets/dce335e0-c288-424a-ad2b-809edaba72d3)
+
+## Step 2: Select directories in napari plugin
+![Screenshot 2025-02-04 at 13 07 36](https://github.com/user-attachments/assets/531700de-6e09-4aaf-93b2-3695ba5611cc)
+
+- Click `Load quantifications dir` and select in the popup the folder with quantification matrices
+- Click `Load image dir` and select in the popup the folder with images
+- Click `Load mask dir` and select in the popup the folder with segmentation masks
+- Optional `Load channel map` can be used to define specific channels, its usage is explain later.
+
+## Step 3: Select lowerbound and upperbound channels
+
+- The two dropdown menus will show all measured features (acquired from the column names from the quantification matrices).
+- The `lowerbound` defines the first feature to threshold, and the `upperbound` the last feature to threshold. Theoretically, you could choose all features. I suggest you pick the ones you need for phenotyping.
+- If you plan to save gates file, and reload the file in another instance, you must pick the same lowerbound and upperbound features.
+- The `Remove markers with prefix (default: DNA,DAPI)` field will let you ignore any channel with any prefix provided, for many prefixes you must separate with a comma `,`. 
+
+## Step 4: Validate and proceed to sample and marker selection
+
+- Press `Validate input` button, it will check files to ensure concordance between files.
+- Assumptions are:
+- Quantification matrix should have the same number of rows as the maximum segmentation CellID
+- Segmentation mask and multiplexed image should have the same x,y dimensions
+
+## Step 5: Sample and marker selection
 
 4. Select a sample, and a marker from dropdown menus. 3 layers will load:   
         (a.) the reference channel (default: first channel, changeable by dropdown menu)   
